@@ -1,0 +1,41 @@
+info:
+  component: Mail Service
+
+server:
+  port: ${PORT:8772}
+  servlet:
+    context-path: ${CONTEXT_PATH:/mail-api}
+
+logging:
+  level:
+    com.tln.product.service: DEBUG
+
+spring:
+  jpa:
+    open-in-view: false
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        ddl-auto: update
+    generate-ddl: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=mail&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified
+    username: localpostgres
+    password: localpostgressecret
+    driver-class-name: org.postgresql.Driver
+    platform: postgres
+    initialization-mode: always
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER_URL:localhost:29092}
+    topic:
+      sendEmailNotification: SEND_EMAIL_NOTIFICATION
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 0
+    consumer:
+      group-id: mail-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer

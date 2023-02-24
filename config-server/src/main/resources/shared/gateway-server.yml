@@ -1,0 +1,13 @@
+server:
+  port: ${SERVER_PORT:8088}
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-api/**
+          filters:
+            - RewritePath=/(?<segment>.*), /$\{segment}

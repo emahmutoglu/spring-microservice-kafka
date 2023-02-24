@@ -1,0 +1,40 @@
+info:
+  description: Config Server
+
+server:
+  port: ${PORT:8888}
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/shared
+  security:
+    user:
+      name: ${CONFIG_SERVER_USERNAME:user}
+      password: ${CONFIG_SERVER_PASSWORD:12345}
+
+eureka:
+  instance:
+    hostname: ${APPLICATION_DOMAIN:${spring.application.name}}
+    homePageUrl: http://${APPLICATION_DOMAIN:${spring.application.name}}/
+    statusPageUrl: http://${APPLICATION_DOMAIN:${spring.application.name}}/actuator/info
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_USERNAME:user}:${EUREKA_PASSWORD:12345}@${DISCOVERY_SERVER_URL:localhost:8761}/eureka/
+    lease:
+      duration: 5
+
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: '*'
